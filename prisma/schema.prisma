@@ -17,6 +17,7 @@ model User {
     sessions         Session[]
     stripeCustomerId String?
     orders           Order[]
+    wallets          UserWallets[]
 }
 
 model Order {
@@ -74,4 +75,13 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model UserWallets {
+    id        String  @id @default(uuid())
+    privateKey String
+    address   String
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [id], references: [id])
 }

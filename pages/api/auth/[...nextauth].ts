@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/util/prisma"
 import Stripe from "stripe"
+import { createWalletForUser } from '@/util/walletUtil';
 
 export const authOptions: NextAuthOptions = {
 	adapter: PrismaAdapter(prisma),
@@ -30,6 +31,11 @@ export const authOptions: NextAuthOptions = {
 				where: { id: user.id },
 				data: { stripeCustomerId: costumer.id },
 			});
+
+			//Create a wallet for the user
+			const wallet = await createWalletForUser(user.id as string);
+			console.log('Creating wallet for user');
+			console.log(wallet);
 		},
 	},
 	callbacks: {
